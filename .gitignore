@@ -1,0 +1,11 @@
+# Directories
+.idea
+.vscode
+node_modules
+dist
+
+# Files
+.env
+src/scripts/config.js
+
+STUDENT.txt
