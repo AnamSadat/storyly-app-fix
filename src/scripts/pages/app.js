@@ -21,6 +21,7 @@ class App {
   #drawerButton = null;
   #navigationDrawer = null;
   #skipLinkButton;
+  #isSubscribed = false;
 
   constructor({ navigationDrawer, drawerButton, content, skipLinkButton }) {
     this.#content = content;
@@ -28,34 +29,40 @@ class App {
     this.#navigationDrawer = navigationDrawer;
     this.#skipLinkButton = skipLinkButton;
 
-    // this._setupDrawer();
     this.#init();
   }
 
-  #init() {
-    setupSkipToContent(this.#skipLinkButton, this.#content);
-    this._setupDrawer();
+  async #init() {
+    setupSkipToContent(this.#skipLinkButton);
+
+    if (isServiceWorkerAvailable()) {
+      await this.#setupPushNotification();
+    }
+
+    await this.renderPage();
+    this.#setupNavigationList();
   }
 
-  _setupDrawer() {
-    this.#drawerButton.addEventListener('click', () => {
-      this.#navigationDrawer.classList.toggle('open');
-    });
+  async renderPage() {
+    const activeRoute = getActiveRoute();
+    const pageFactory = routes[activeRoute];
 
-    document.body.addEventListener('click', (event) => {
-      if (
-        !this.#navigationDrawer.contains(event.target) &&
-        !this.#drawerButton.contains(event.target)
-      ) {
-        this.#navigationDrawer.classList.remove('open');
-      }
+    if (!pageFactory) {
+      this.#content.innerHTML = '<h2>404 - Page not found</h2>';
+      return;
+    }
 
-      this.#navigationDrawer.querySelectorAll('a').forEach((link) => {
-        if (link.contains(event.target)) {
-          this.#navigationDrawer.classList.remove('open');
-        }
-      });
-    });
+    try {
+      const page = pageFactory();
+      if (!page) return; // Handle case when auth check fails
+
+      const content = await page.render();
+      this.#content.innerHTML = content;
+      await page.afterRender();
+    } catch (error) {
+      console.error(error);
+      this.#content.innerHTML = '<h2>Error rendering page</h2>';
+    }
   }
 
   async #waitForElement(selector, timeout = 2000) {
@@ -78,32 +85,44 @@ class App {
     const pushNotificationTools = document.getElementById('push-notification-tools');
     if (!pushNotificationTools) return;
 
-    const isSubscribed = await isCurrentPushSubscriptionAvailable();
+    // Check subscription status
+    this.#isSubscribed = await isCurrentPushSubscriptionAvailable();
+    this.#updateSubscriptionUI(pushNotificationTools);
 
-    if (isSubscribed) {
+    // Listen for hash changes to update subscription UI
+    window.addEventListener('hashchange', () => {
+      const pushTools = document.getElementById('push-notification-tools');
+      if (pushTools) {
+        this.#updateSubscriptionUI(pushTools);
+      }
+    });
+  }
+
+  async #updateSubscriptionUI(pushNotificationTools) {
+    if (this.#isSubscribed) {
       pushNotificationTools.innerHTML = generateUnsubscribeButtonTemplate();
-
       try {
-        const unsubscribee = await this.#waitForElement('#unsubscribe-button');
-        unsubscribee.addEventListener('click', () => {
-          unsubscribe().finally(() => this.#setupPushNotification());
+        const unsubscribeBtn = await this.#waitForElement('#unsubscribe-button');
+        unsubscribeBtn.addEventListener('click', async () => {
+          await unsubscribe();
+          this.#isSubscribed = false;
+          this.#updateSubscriptionUI(pushNotificationTools);
         });
       } catch (err) {
         console.warn('unsubscribe-button not found after rendering!');
       }
-
-      return;
-    }
-
-    pushNotificationTools.innerHTML = generateSubscribeButtonTemplate();
-
-    try {
-      const subscribeButton = await this.#waitForElement('#subscribe-button');
-      subscribeButton.addEventListener('click', () => {
-        subscribe().finally(() => this.#setupPushNotification());
-      });
-    } catch (err) {
-      console.warn('subscribe-button not found after rendering!');
+    } else {
+      pushNotificationTools.innerHTML = generateSubscribeButtonTemplate();
+      try {
+        const subscribeBtn = await this.#waitForElement('#subscribe-button');
+        subscribeBtn.addEventListener('click', async () => {
+          await subscribe();
+          this.#isSubscribed = await isCurrentPushSubscriptionAvailable();
+          this.#updateSubscriptionUI(pushNotificationTools);
+        });
+      } catch (err) {
+        console.warn('subscribe-button not found after rendering!');
+      }
     }
   }
 
@@ -111,14 +130,11 @@ class App {
     const isLogin = !!getAccessToken();
     const navList = this.#navigationDrawer.children.namedItem('navlist');
 
-    // User not log in
     if (!isLogin) {
       navList.innerHTML = '';
       navList.innerHTML = generateUnauthenticatedNavigationListTemplate();
       return;
     }
-
-    navList.innerHTML = generateMainNavigationListTemplate();
 
     navList.innerHTML = generateAuthenticatedNavigationListTemplate();
 
@@ -140,30 +156,6 @@ class App {
           location.hash = '/login';
         }
       });
-    });
-  }
-
-  async renderPage() {
-    const url = getActiveRoute();
-    const route = routes[url];
-
-    const page = route();
-
-    const transition = transitionHelper({
-      updateDOM: async () => {
-        this.#content.innerHTML = await page.render();
-        await page.afterRender();
-      },
-    });
-
-    transition.ready.catch(console.error);
-    transition.updateCallbackDone.then(() => {
-      scrollTo({ top: 0, behavior: 'instant' });
-      this.#setupNavigationList();
-
-      if (isServiceWorkerAvailable()) {
-        setTimeout(() => this.#setupPushNotification(), 0);
-      }
     });
   }
 }

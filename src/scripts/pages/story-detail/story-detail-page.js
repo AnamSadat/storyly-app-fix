@@ -78,6 +78,7 @@ export default class StoryDetailPage {
       generateSaveReportButtonTemplate();
 
     document.getElementById('story-detail-save').addEventListener('click', async () => {
+      event.preventDefault();
       await this.#presenter.saveReport();
       await this.#presenter.showSaveButton();
       console.log('simpan');
