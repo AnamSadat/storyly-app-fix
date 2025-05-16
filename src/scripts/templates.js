@@ -20,16 +20,16 @@ export function generateUnauthenticatedNavigationListTemplate() {
 
 export function generateAuthenticatedNavigationListTemplate() {
   return `
-    <li id="push-notification-tools" class="push-notification-tools"></li>
+    <li id="push-notification-tools" class="push-notification-tools"><button class="btn-ghost btn-webpush btn-ghost-mobile"><i class='fas fa-bell'></i>Subscribe</button></li>
     <li><a id="new-report-button" href="#/new"><button class="btn-ghost btn-ghost-mobile">Buat Cerita<i class="fas fa-plus"></i></button></a></li>
-    <li><a id="logout-button" class="logout-button" href="#/logout"><button class="btn"><i class="fas fa-sign-out-alt"></i> Logout</button></a></li>
+    <li><a id="logout-button" class="logout-button" href="#/logout"><button class="btn">Logout <i class="fas fa-sign-out-alt"></i></button></a></li>
   `;
 }
 
 export function generateMainNavigationListTemplate() {
   return `
-    <li><a id="story-list-button" class="story-list-button" href="#/">Daftar Laporan</a></li>
-    <li><a id="bookmark-button" class="bookmark-button" href="#/bookmark">Laporan Tersimpan</a></li>
+  <li><a id="cerita-button" class="story-button" href="#/savedstor">Story Save</a></li>
+  <li><a id="story-list-button" class="story-list-button" href="#/">About</a></li>
   `;
 }
 
@@ -43,6 +43,12 @@ export function generateStoryItemTemplate({
   photoUrl,
   placeName,
 }) {
+  if (lat === null) {
+    lat = 'Tidak Diketahui';
+  }
+  if (lon === null) {
+    lon = 'Tidak Diketahui';
+  }
   return `
     <div id="${id}" class="story-item">
       <a href="#/story/${id}" class="card">
@@ -51,7 +57,12 @@ export function generateStoryItemTemplate({
           <h3 class="story-item__name">${name}</h3>
           <p class="story-item__description">${description}</p>
           <div class="story-item__meta">
-            <span class="story-item__date">${new Date(createdAt).toLocaleDateString()}</span>
+            <span class="story-item__date">${new Date(createdAt).toLocaleDateString('id-ID', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}</span>
             <span class="story-item__location">📍 ${
               placeName ? placeName : 'Tidak diketahui'
             }</span>
@@ -99,12 +110,24 @@ export function generateStoryDetailTemplate({
   photoUrl,
   space = '&nbsp;&nbsp;&nbsp;',
 }) {
+  if (lat === null) {
+    lat = 'Tidak Diketahui';
+  }
+  if (lon === null) {
+    lon = 'Tidak Diketahui';
+  }
   return `
     <div class="story-detail">
-      <div class="story-detail__header">
-        <img src="${photoUrl}" alt="Story by ${name}" class="story-detail__image">
-        <h2 class="story-detail__title">${name}</h2>
-        <p class="story-detail__date">${new Date(createdAt).toLocaleString()}</p>
+    <img src="${photoUrl}" alt="Story by ${name}" class="story-detail__image">
+    <div class="story-detail__header">
+        <div class="label-name">
+          <h2 class="story-detail__title">${name}</h2>
+          <p class="story-detail__date">${new Date(createdAt).toLocaleString()}</p>
+        </div>
+        <div class="report-detail__actions__buttons">
+          <div id="save-actions-container"></div>
+          
+        </div>
       </div>
       <div class="story-detail__content">
         <p class="story-detail__description">${description}</p>
@@ -119,7 +142,7 @@ export function generateStoryDetailTemplate({
           </p>
         </div>
       </div>
-      <div class="story-detail__body__map__container">
+      <div id="title-map" class="story-detail__body__map__container">
         <h2 class="story-detail__map__title">Lokasi</h2>
         <div class="story-detail__map__container">
           <div id="map" class="story-detail__map"></div>
@@ -127,5 +150,49 @@ export function generateStoryDetailTemplate({
         </div>
       </div>
     </div>
+  `;
+}
+
+export function generateMapErrorTemplate(message) {
+  message = 'Coba segarkan halaman atau periksa koneksi Anda dan izin akses.';
+  return `
+    <div id="id-map-error" class="map-error">
+      <i class='fas fa-exclamation-circle'></i>
+      <h3>Gagal Memuat Peta</h3>
+      <p>${message}</p>
+      <p><a href="#" id="request-location">Izinkan Akses Lokasi</a></p>
+    </div>
+  `;
+}
+
+export function generateSubscribeButtonTemplate() {
+  return `
+    <button id="subscribe-button" class="btn subscribe-button">
+      Subscribe <i class="fas fa-bell"></i>
+    </button>
+  `;
+}
+
+export function generateUnsubscribeButtonTemplate() {
+  return `
+    <button id="unsubscribe-button" class="btn unsubscribe-button">
+      Unsubscribe <i class="fas fa-bell-slash"></i>
+    </button>
+  `;
+}
+
+export function generateSaveReportButtonTemplate() {
+  return `
+    <button id="story-detail-save" class="btn btn-transparent">
+      Simpan Story <i class="far fa-bookmark"></i>
+    </button>
+  `;
+}
+
+export function generateRemoveReportButtonTemplate() {
+  return `
+    <button id="story-detail-remove" class="btn btn-transparent">
+      Batal Simpan <i class="fas fa-bookmark"></i>
+    </button>
   `;
 }

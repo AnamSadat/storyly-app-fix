@@ -1,21 +1,26 @@
 import Camera from '../../utils/camera';
-import NewPresenter from './new-presenter';
+import AddStoryPagePresenter from './add-story-presenter';
 import * as StoryAPI from '../../data/api';
 import Map from '../../utils/map';
-import { generateLoaderAbsoluteTemplate } from '../../templates';
+import { generateLoaderAbsoluteTemplate, generateMapErrorTemplate } from '../../templates';
 import Swal from 'sweetalert2';
+import Screenshot from '../../utils/screenshot';
 
-export default class NewPage {
+export default class AddStoryPage {
   #presenter;
   #form;
   #isCameraOpen = false;
   #takenDocumentations = null;
   #camera;
   #map = null;
+  #isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent,
+  );
+  #screenshot;
 
   async render() {
     return `  
-    <section>
+      <section>
         <div class="new-story__header">
           <div class="container">
             <h1 class="new-story__header__title">Buat Cerita Baru</h1>
@@ -59,13 +64,16 @@ export default class NewPage {
                   <button id="open-documentations-camera-button" class="btn btn-ghost" type="button">
                     <i class="fas fa-camera"></i>Buka Kamera
                   </button>
+                  <button id="take-screenshot-button" class="btn btn-ghost" type="button">
+                    <i class='fas fa-images'></i> Screenshot
+                  </button>
                 </div>
                 <div id="camera-container" class="new-form__camera__container camera-mobile">
                 <video id="camera-video" class="new-form__camera__video">
                   Video stream not available.
                 </video>
 
-                 <canvas id="camera-canvas" class="new-form__camera__canvas"></canvas>
+                  <canvas id="camera-canvas" class="new-form__camera__canvas"></canvas>
  
                 <div class="new-form__camera__tools">
                   <select id="camera-select"></select>
@@ -106,14 +114,20 @@ export default class NewPage {
   }
 
   async afterRender() {
-    this.#presenter = new NewPresenter({
+    this.#presenter = new AddStoryPagePresenter({
       view: this,
       model: StoryAPI,
     });
-    this.#takenDocumentations = null;
+    this.#screenshot = new Screenshot({
+      loadingElement: document.getElementById('screenshot-loading'),
+      scale: 2,
+    });
 
+    this.#takenDocumentations = null;
+    this.#setupScreenshotButton();
     this.#presenter.showNewFormMap();
     this.#setupForm();
+    this.#setupMobileFeatures();
   }
 
   #setupCamera() {
@@ -154,7 +168,7 @@ export default class NewPage {
 
     this.#map.addMapEventListener('click', (event) => {
       draggableMarker.setLatLng(event.latlng);
-
+      this.#updateLatLngInput(event.latlng.lat, event.latlng.lng);
       event.sourceTarget.flyTo(event.latlng);
     });
   }
@@ -180,6 +194,7 @@ export default class NewPage {
         longitude: this.#form.elements.namedItem('longitude').value,
       };
       console.log(data);
+
       await this.#presenter.postNewStory(data);
     });
 
@@ -262,6 +277,71 @@ export default class NewPage {
     }
   }
 
+  #scrollDocumentationList(direction) {
+    const list = document.getElementById('documentations-taken-list');
+    if (list) list.scrollBy({ left: 200 * direction, behavior: 'smooth' });
+  }
+
+  #setupMobileFeatures() {
+    if (!this.#isMobile) return;
+
+    document
+      .getElementById('open-mobile-camera')
+      .addEventListener('click', () =>
+        document.getElementById('open-documentations-camera-button').click(),
+      );
+
+    const docsList = document.getElementById('documentations-taken-list');
+    if (docsList) {
+      let touchStartX = 0;
+      docsList.addEventListener(
+        'touchstart',
+        (e) => (touchStartX = e.changedTouches[0].screenX),
+        false,
+      );
+      docsList.addEventListener(
+        'touchend',
+        (e) => {
+          const touchEndX = e.changedTouches[0].screenX;
+          if (Math.abs(touchEndX - touchStartX) > 50) {
+            this.#scrollDocumentationList(touchEndX < touchStartX ? 1 : -1);
+          }
+        },
+        false,
+      );
+    }
+  }
+
+  #setupScreenshotButton() {
+    document
+      .getElementById('take-screenshot-button')
+      .addEventListener('click', () => this.#takeScreenshot());
+  }
+
+  async #takeScreenshot() {
+    try {
+      if (this.#isMobile) {
+        document.getElementById('open-documentations-camera-button').click();
+        return;
+      }
+
+      const canvas = await this.#screenshot.take(document.getElementById('new-form'));
+      canvas.toBlob(async (blob) => {
+        if (blob) {
+          await this.#addTakenPicture(blob);
+          await this.#populateTakenPictures();
+        }
+      }, 'image/webp');
+    } catch (error) {
+      // console.error('Screenshot error:', error);
+      Swal.fire({
+        title: 'Gagal screenshot',
+        text: 'Coba beberapa saat lagi',
+        icon: 'error',
+      });
+    }
+  }
+
   #updateLatLngInput(latitude, longitude) {
     this.#form.elements.namedItem('latitude').value = latitude;
     this.#form.elements.namedItem('longitude').value = longitude;
@@ -270,9 +350,16 @@ export default class NewPage {
   storeSuccessfully(message) {
     console.log(message);
     this.clearForm();
-
-    // Redirect page
-    location.href = '/';
+    Swal.fire({
+      title: 'Story Dibuat',
+      text: 'Klik OK untuk kembali ke halaman utama',
+      icon: 'success',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Redirect setelah klik tombol OK
+        window.location.href = '/';
+      }
+    });
   }
 
   storeFailed(message) {
@@ -307,5 +394,9 @@ export default class NewPage {
 
   hideMapLoading() {
     document.getElementById('map-loading-container').innerHTML = '';
+  }
+
+  mapError(message) {
+    document.getElementById('map').innerHTML = generateMapErrorTemplate(message);
   }
 }

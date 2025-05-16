@@ -5,9 +5,16 @@ import {
   generateAuthenticatedNavigationListTemplate,
   generateMainNavigationListTemplate,
   generateUnauthenticatedNavigationListTemplate,
+  generateSubscribeButtonTemplate,
+  generateUnsubscribeButtonTemplate,
 } from '../templates';
-import { setupSkipToContent, transitionHelper } from '../utils';
+import { setupSkipToContent, transitionHelper, isServiceWorkerAvailable } from '../utils';
 import { getAccessToken, getLogout } from '../utils/auth';
+import {
+  isCurrentPushSubscriptionAvailable,
+  subscribe,
+  unsubscribe,
+} from '../utils/notification-helper';
 
 class App {
   #content = null;
@@ -49,6 +56,55 @@ class App {
         }
       });
     });
+  }
+
+  async #waitForElement(selector, timeout = 2000) {
+    return new Promise((resolve, reject) => {
+      const start = Date.now();
+      const interval = setInterval(() => {
+        const el = document.querySelector(selector);
+        if (el) {
+          clearInterval(interval);
+          resolve(el);
+        } else if (Date.now() - start > timeout) {
+          clearInterval(interval);
+          reject(new Error(`Timeout waiting for ${selector}`));
+        }
+      }, 50);
+    });
+  }
+
+  async #setupPushNotification() {
+    const pushNotificationTools = document.getElementById('push-notification-tools');
+    if (!pushNotificationTools) return;
+
+    const isSubscribed = await isCurrentPushSubscriptionAvailable();
+
+    if (isSubscribed) {
+      pushNotificationTools.innerHTML = generateUnsubscribeButtonTemplate();
+
+      try {
+        const unsubscribee = await this.#waitForElement('#unsubscribe-button');
+        unsubscribee.addEventListener('click', () => {
+          unsubscribe().finally(() => this.#setupPushNotification());
+        });
+      } catch (err) {
+        console.warn('unsubscribe-button not found after rendering!');
+      }
+
+      return;
+    }
+
+    pushNotificationTools.innerHTML = generateSubscribeButtonTemplate();
+
+    try {
+      const subscribeButton = await this.#waitForElement('#subscribe-button');
+      subscribeButton.addEventListener('click', () => {
+        subscribe().finally(() => this.#setupPushNotification());
+      });
+    } catch (err) {
+      console.warn('subscribe-button not found after rendering!');
+    }
   }
 
   #setupNavigationList() {
@@ -104,6 +160,10 @@ class App {
     transition.updateCallbackDone.then(() => {
       scrollTo({ top: 0, behavior: 'instant' });
       this.#setupNavigationList();
+
+      if (isServiceWorkerAvailable()) {
+        setTimeout(() => this.#setupPushNotification(), 0);
+      }
     });
   }
 }

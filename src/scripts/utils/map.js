@@ -13,6 +13,9 @@ export default class Map {
   }
 
   static async getPlaceNameByCoordinate(latitude, longitude) {
+    if (latitude == null || longitude == null) {
+      return 'Lokasi tidak diketahui';
+    }
     try {
       const url = new URL(`https://api.maptiler.com/geocoding/${longitude},${latitude}.json`);
       url.searchParams.set('key', CONFIG.MAP_SERVICE_API_KEY);
@@ -20,6 +23,11 @@ export default class Map {
       url.searchParams.set('limit', '1');
       const response = await fetch(url);
       const json = await response.json();
+      // const features = json.features;
+      // if (!features || features.length === 0) {
+      //   return `${latitude}, ${longitude}`;
+      // }
+      // const place = features[0].place_name.split(', ');
       const place = json.features[0].place_name.split(', ');
       return [place.at(-2), place.at(-1)].map((name) => name).join(', ');
     } catch (error) {
@@ -62,7 +70,7 @@ export default class Map {
         });
       } catch (error) {
         console.error('build: error:', error);
-
+        console.log('kesini?');
         return new Map(selector, {
           ...options,
           center: jakartaCoordinate,
@@ -70,6 +78,7 @@ export default class Map {
       }
     }
 
+    console.log('apakah kesini?');
     return new Map(selector, {
       ...options,
       center: jakartaCoordinate,
@@ -107,12 +116,34 @@ export default class Map {
       },
     );
 
+    const container = document.querySelector(selector);
+
+    // FIX: Properly remove previous map instance if already initialized
+    if (container._leaflet_id != null) {
+      const oldMap = container._leaflet_map;
+      if (oldMap) {
+        oldMap.remove(); // remove the map from the DOM
+        console.log('ke oldmap');
+      }
+      console.log('baru di bawah oldmap');
+      container.innerHTML = ''; // optionally clear contents
+    }
+
     this.#map = map(document.querySelector(selector), {
       zoom: this.#zoom,
       scrollWheelZoom: false,
       layers: [tileOsm],
+      dragging: true,
+      tap: true,
       ...options,
     });
+
+    container._leaflet_map = this.#map;
+
+    // this.#map.touchZoom.enable();
+    // this.#map.doubleClickZoom.enable();
+    // this.#map.boxZoom.enable();
+    // this.#map.keyboard.enable();
 
     const baseMaps = {
       OpenStreetMap: tileOsm,
@@ -176,4 +207,24 @@ export default class Map {
   addMapEventListener(eventName, callback) {
     this.#map.addEventListener(eventName, callback);
   }
+
+  getGeolocationErrorMessage(error) {
+    switch (error.code) {
+      case error.PERMISSION_DENIED:
+        return 'Akses lokasi ditolak. Aktifkan izin lokasi di pengaturan browser.';
+      case error.POSITION_UNAVAILABLE:
+        return 'Lokasi tidak tersedia. Coba lagi dalam beberapa saat.';
+      case error.TIMEOUT:
+        return 'Permintaan lokasi terlalu lama. Periksa koneksi internet Anda.';
+      case error.UNKNOWN_ERROR:
+      default:
+        return 'Terjadi kesalahan yang tidak diketahui saat mengambil lokasi.';
+    }
+  }
+
+  // async lonLatNull(lat, lon){
+  //   if(lat === null || lon === null){
+  //     mapError();
+  //   }
+  // }
 }

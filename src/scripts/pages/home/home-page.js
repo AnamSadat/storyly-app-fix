@@ -5,6 +5,7 @@ import {
   generateStoriesListEmptyTemplate,
   generateStoriesListErrorTemplate,
   generateStoryItemTemplate,
+  generateMapErrorTemplate,
 } from '../../templates';
 import HomePresenter from './home-presenter';
 import Map from '../../utils/map';
@@ -15,12 +16,12 @@ export default class HomePage {
 
   async render() {
     return `
-    <section class="map-container">
-      <div class="story-list__map__container">
-        <div id="map" class="story-list__map"></div>
-        <div id="map-loading-container"></div>
-      </div>
-    </section>
+      <section class="map-container">
+        <div class="story-list__map__container">
+          <div id="map" class="story-list__map"></div>
+          <div id="map-loading-container"></div>
+        </div>
+      </section>
 
       <section class="container">
         <h1 class="tag-line">Stories</h1>
@@ -90,5 +91,9 @@ export default class HomePage {
 
   populateStoriesEmpty() {
     document.getElementById('story-list').innerHTML = generateStoriesListEmptyTemplate();
+  }
+
+  mapError(message) {
+    document.getElementById('map').innerHTML = generateMapErrorTemplate(message);
   }
 }

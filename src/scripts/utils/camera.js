@@ -1,3 +1,5 @@
+import Swal from 'sweetalert2';
+
 export default class Camera {
   #currentStream;
   #streaming = false;
@@ -100,8 +102,36 @@ export default class Camera {
       return stream;
     } catch (error) {
       console.error('#getStream: error:', error);
+      Swal.fire({
+        title: 'Akses Kamera tidak di izinkan',
+        text: 'Mohon untuk izinkan akses kamera untuk memulai kamera',
+        icon: 'error',
+      });
+      // this.permissionLocation();
       return null;
     }
+  }
+
+  permissionLocation() {
+    document.getElementById('request-location').addEventListener('click', function (e) {
+      e.preventDefault(); // mencegah reload halaman
+
+      if (!navigator.geolocation) {
+        alert('Geolocation tidak didukung oleh browser Anda.');
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log('Lokasi berhasil:', position);
+          // Lakukan sesuatu dengan posisi di sini
+        },
+        (error) => {
+          console.error('Gagal mendapatkan lokasi:', error);
+          alert('Gagal mendapatkan lokasi. Periksa izin lokasi Anda.');
+        },
+      );
+    });
   }
 
   async takePicture() {

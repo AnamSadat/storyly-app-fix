@@ -4,8 +4,12 @@ import {
   generateLoaderAbsoluteTemplate,
   generateStoriesListErrorTemplate,
   generateStoryDetailTemplate,
+  generateSaveReportButtonTemplate,
 } from '../../templates';
 import Map from '../../utils/map';
+import * as StorylyAppApi from '../../data/api';
+import Database from '../../data/database';
+import Swal from 'sweetalert2';
 
 export default class StoryDetailPage {
   #presenter = null;
@@ -25,9 +29,17 @@ export default class StoryDetailPage {
   async afterRender() {
     this.#presenter = new StoryDetailPresenter(parseActivePathname().id, {
       view: this,
+      apiModel: StorylyAppApi,
+      dbModel: Database,
     });
 
     this.#presenter.showStoryDetail();
+  }
+
+  async initialMap() {
+    this.#map = await Map.build('#map', {
+      zoom: 15,
+    });
   }
 
   async populateStoryDetail(story) {
@@ -46,10 +58,50 @@ export default class StoryDetailPage {
         this.#map.addMarker(storyCoordinate, markerOptions, popupOptions);
       }
     }
+
+    this.#presenter.showSaveButton();
   }
 
   populateStoryDetailError(error) {
     document.getElementById('story-detail').innerHTML = generateStoriesListErrorTemplate(error);
+  }
+
+  addNotifyMeEventListener() {
+    document.getElementById('story-detail-notify-me').addEventListener('click', () => {
+      console.log('addeven');
+      this.#presenter.notifyMe();
+    });
+  }
+
+  renderSaveButton() {
+    document.getElementById('save-actions-container').innerHTML =
+      generateSaveReportButtonTemplate();
+
+    document.getElementById('story-detail-save').addEventListener('click', async () => {
+      await this.#presenter.saveReport();
+      await this.#presenter.showSaveButton();
+      console.log('simpan');
+    });
+  }
+
+  saveToBookmarkSuccessfully(message) {
+    console.log(message);
+  }
+  saveToBookmarkFailed(message) {
+    Swal.fire({
+      title: 'Gagal Simpan',
+      text: `${message}`,
+      icon: 'error',
+    });
+  }
+
+  renderRemoveButton() {
+    document.getElementById('save-actions-container').innerHTML =
+      generateRemoveReportButtonTemplate();
+
+    document.getElementById('story-detail-remove').addEventListener('click', async () => {
+      alert('Fitur simpan laporan akan segera hadir!');
+    });
   }
 
   showStoryDetailLoading() {
@@ -67,11 +119,5 @@ export default class StoryDetailPage {
 
   hideMapLoading() {
     document.getElementById('map-loading-container').innerHTML = '';
-  }
-
-  async initialMap() {
-    this.#map = await Map.build('#map', {
-      zoom: 15,
-    });
   }
 }
