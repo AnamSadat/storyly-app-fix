@@ -34,13 +34,35 @@ class App {
 
   async #init() {
     setupSkipToContent(this.#skipLinkButton);
+    this.#setupNavigationList();
+    this._setupDrawer();
 
     if (isServiceWorkerAvailable()) {
       await this.#setupPushNotification();
     }
 
     await this.renderPage();
-    this.#setupNavigationList();
+  }
+
+  _setupDrawer() {
+    this.#drawerButton.addEventListener('click', () => {
+      this.#navigationDrawer.classList.toggle('open');
+    });
+
+    document.body.addEventListener('click', (event) => {
+      if (
+        !this.#navigationDrawer.contains(event.target) &&
+        !this.#drawerButton.contains(event.target)
+      ) {
+        this.#navigationDrawer.classList.remove('open');
+      }
+
+      this.#navigationDrawer.querySelectorAll('a').forEach((link) => {
+        if (link.contains(event.target)) {
+          this.#navigationDrawer.classList.remove('open');
+        }
+      });
+    });
   }
 
   async renderPage() {
@@ -56,9 +78,18 @@ class App {
       const page = pageFactory();
       if (!page) return; // Handle case when auth check fails
 
-      const content = await page.render();
-      this.#content.innerHTML = content;
-      await page.afterRender();
+      const transition = transitionHelper({
+        updateDOM: async () => {
+          const content = await page.render();
+          this.#content.innerHTML = content;
+          await page.afterRender();
+        },
+      });
+
+      transition.ready.catch(console.error);
+      transition.updateCallbackDone.then(() => {
+        scrollTo({ top: 0, behavior: 'instant' });
+      });
     } catch (error) {
       console.error(error);
       this.#content.innerHTML = '<h2>Error rendering page</h2>';
@@ -85,43 +116,34 @@ class App {
     const pushNotificationTools = document.getElementById('push-notification-tools');
     if (!pushNotificationTools) return;
 
-    // Check subscription status
+    // Check subscription status and update UI
     this.#isSubscribed = await isCurrentPushSubscriptionAvailable();
-    this.#updateSubscriptionUI(pushNotificationTools);
-
-    // Listen for hash changes to update subscription UI
-    window.addEventListener('hashchange', () => {
-      const pushTools = document.getElementById('push-notification-tools');
-      if (pushTools) {
-        this.#updateSubscriptionUI(pushTools);
-      }
-    });
+    await this.#updateSubscriptionUI(pushNotificationTools);
   }
 
   async #updateSubscriptionUI(pushNotificationTools) {
+    // Clear existing content and event listeners
+    pushNotificationTools.innerHTML = '';
+
     if (this.#isSubscribed) {
       pushNotificationTools.innerHTML = generateUnsubscribeButtonTemplate();
-      try {
-        const unsubscribeBtn = await this.#waitForElement('#unsubscribe-button');
+      const unsubscribeBtn = await this.#waitForElement('#unsubscribe-button');
+      if (unsubscribeBtn) {
         unsubscribeBtn.addEventListener('click', async () => {
           await unsubscribe();
           this.#isSubscribed = false;
-          this.#updateSubscriptionUI(pushNotificationTools);
+          await this.#updateSubscriptionUI(pushNotificationTools);
         });
-      } catch (err) {
-        console.warn('unsubscribe-button not found after rendering!');
       }
     } else {
       pushNotificationTools.innerHTML = generateSubscribeButtonTemplate();
-      try {
-        const subscribeBtn = await this.#waitForElement('#subscribe-button');
+      const subscribeBtn = await this.#waitForElement('#subscribe-button');
+      if (subscribeBtn) {
         subscribeBtn.addEventListener('click', async () => {
           await subscribe();
           this.#isSubscribed = await isCurrentPushSubscriptionAvailable();
-          this.#updateSubscriptionUI(pushNotificationTools);
+          await this.#updateSubscriptionUI(pushNotificationTools);
         });
-      } catch (err) {
-        console.warn('subscribe-button not found after rendering!');
       }
     }
   }

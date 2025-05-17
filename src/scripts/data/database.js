@@ -26,5 +26,30 @@ const Database = {
     }
     return (await dbPromise).get(OBJECT_STORE_NAME, id);
   },
+
+  async getAllStory() {
+    return (await dbPromise).getAll(OBJECT_STORE_NAME);
+  },
+
+  async deleteSavedStory(id) {
+    if (!id) {
+      console.error('Error: ID tidak boleh kosong.');
+      return;
+    }
+
+    const db = await dbPromise;
+    const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite'); // Perbaikan di sini
+    const store = tx.objectStore(OBJECT_STORE_NAME); // Perbaikan di sini
+
+    try {
+      await store.delete(id);
+      console.log('Story berhasil dihapus:', id);
+    } catch (error) {
+      console.error('Gagal menghapus story:', error);
+    }
+
+    return tx.done;
+  },
 };
+
 export default Database;

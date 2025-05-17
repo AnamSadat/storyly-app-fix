@@ -82,16 +82,17 @@ export default class StoryDetailPresenter {
     }
   }
 
-  showSaveButton() {
-    if (this.#isStorySaved()) {
-      this.#view.renderRemoveButton();
-      return;
-    }
+  async showSaveButton() {
+    const isSaved = await this.#isStorySaved();
 
-    this.#view.renderSaveButton();
+    if (isSaved) {
+      this.#view.renderRemoveButton();
+    } else {
+      this.#view.renderSaveButton();
+    }
   }
 
-  #isStorySaved() {
-    return false;
+  async #isStorySaved() {
+    return !!(await this.#dbModel.getReportById(this.#storyId));
   }
 }

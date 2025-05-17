@@ -28,6 +28,16 @@ export default class Map {
       //   return `${latitude}, ${longitude}`;
       // }
       // const place = features[0].place_name.split(', ');
+      if (!CONFIG.MAP_SERVICE_API_KEY) {
+        console.warn('MAP_SERVICE_API_KEY belum diset!');
+      }
+
+      // console.log('API response:', json);
+
+      if (!json.features || json.features.length === 0) {
+        console.log('kosong?');
+        return `${latitude}, ${longitude}`;
+      }
       const place = json.features[0].place_name.split(', ');
       return [place.at(-2), place.at(-1)].map((name) => name).join(', ');
     } catch (error) {

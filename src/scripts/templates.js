@@ -20,7 +20,7 @@ export function generateUnauthenticatedNavigationListTemplate() {
 
 export function generateAuthenticatedNavigationListTemplate() {
   return `
-    <li id="push-notification-tools" class="push-notification-tools"><button class="btn-ghost btn-webpush btn-ghost-mobile"><i class='fas fa-bell'></i>Subscribe</button></li>
+    <li id="push-notification-tools" class="push-notification-tools"></li>
     <li><a id="new-report-button" href="#/new"><button class="btn-ghost btn-ghost-mobile">Buat Cerita<i class="fas fa-plus"></i></button></a></li>
     <li><a id="logout-button" class="logout-button" href="#/logout"><button class="btn">Logout <i class="fas fa-sign-out-alt"></i></button></a></li>
   `;

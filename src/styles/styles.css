@@ -695,6 +695,16 @@ i.loader-button {
 
 /* story list */
 
+.card-list {
+}
+
+.stories-list__container {
+  display: grid;
+  /* grid-template-columns: repeat(3, 1fr); */
+  gap: 16px;
+  margin-top: 12px;
+}
+
 .story-list__error,
 .story-list__empty {
   background: var(--primary-shadow-color);

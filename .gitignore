@@ -6,6 +6,6 @@ dist
 
 # Files
 .env
-src/scripts/config.js
+# src/scripts/config.js
 
-STUDENT.txt
+# STUDENT.txt

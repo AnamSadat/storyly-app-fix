@@ -5,6 +5,7 @@ import {
   generateStoriesListErrorTemplate,
   generateStoryDetailTemplate,
   generateSaveReportButtonTemplate,
+  generateRemoveReportButtonTemplate,
 } from '../../templates';
 import Map from '../../utils/map';
 import * as StorylyAppApi from '../../data/api';
@@ -59,7 +60,7 @@ export default class StoryDetailPage {
       }
     }
 
-    this.#presenter.showSaveButton();
+    await this.#presenter.showSaveButton();
   }
 
   populateStoryDetailError(error) {
@@ -78,7 +79,6 @@ export default class StoryDetailPage {
       generateSaveReportButtonTemplate();
 
     document.getElementById('story-detail-save').addEventListener('click', async () => {
-      event.preventDefault();
       await this.#presenter.saveReport();
       await this.#presenter.showSaveButton();
       console.log('simpan');
@@ -86,8 +86,14 @@ export default class StoryDetailPage {
   }
 
   saveToBookmarkSuccessfully(message) {
+    Swal.fire({
+      title: 'Berhasil Simpan',
+      text: `${message}`,
+      icon: 'success',
+    });
     console.log(message);
   }
+
   saveToBookmarkFailed(message) {
     Swal.fire({
       title: 'Gagal Simpan',
@@ -101,7 +107,11 @@ export default class StoryDetailPage {
       generateRemoveReportButtonTemplate();
 
     document.getElementById('story-detail-remove').addEventListener('click', async () => {
-      alert('Fitur simpan laporan akan segera hadir!');
+      Swal.fire({
+        title: 'Info',
+        text: `Buka Daftar Tersimpan untuk menghapus cerita ini.`,
+        icon: 'info',
+      });
     });
   }
 

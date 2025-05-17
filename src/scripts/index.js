@@ -15,13 +15,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   window.addEventListener('hashchange', async () => {
     await app.renderPage();
-
     Camera.stopAllStreams();
   });
 
   await registerServiceWorker();
-
-  window.addEventListener('hashchange', async () => {
-    await app.renderPage();
-  });
 });
