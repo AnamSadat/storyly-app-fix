@@ -7,6 +7,7 @@ import {
   generateUnauthenticatedNavigationListTemplate,
   generateSubscribeButtonTemplate,
   generateUnsubscribeButtonTemplate,
+  generateNotFound,
 } from '../templates';
 import { setupSkipToContent, transitionHelper, isServiceWorkerAvailable } from '../utils';
 import { getAccessToken, getLogout } from '../utils/auth';
@@ -15,6 +16,7 @@ import {
   subscribe,
   unsubscribe,
 } from '../utils/notification-helper';
+import notFoundPage from './not-found/not-found-page';
 
 class App {
   #content = null;
@@ -70,7 +72,7 @@ class App {
     const pageFactory = routes[activeRoute];
 
     if (!pageFactory) {
-      this.#content.innerHTML = '<h2>404 - Page not found</h2>';
+      this.#content.innerHTML = notFoundPage();
       return;
     }
 
@@ -92,7 +94,7 @@ class App {
       });
     } catch (error) {
       console.error(error);
-      this.#content.innerHTML = '<h2>Error rendering page</h2>';
+      this.#content.innerHTML = notFoundPage();
     }
   }
 

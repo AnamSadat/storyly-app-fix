@@ -167,7 +167,7 @@ export function generateMapErrorTemplate(message) {
 
 export function generateSubscribeButtonTemplate() {
   return `
-    <button id="subscribe-button" class="btn subscribe-button">
+    <button id="subscribe-button" class="btn subscribe-button scribe-button">
       Subscribe <i class="fas fa-bell"></i>
     </button>
   `;
@@ -175,7 +175,7 @@ export function generateSubscribeButtonTemplate() {
 
 export function generateUnsubscribeButtonTemplate() {
   return `
-    <button id="unsubscribe-button" class="btn unsubscribe-button">
+    <button id="unsubscribe-button" class="btn unsubscribe-button scribe-button">
       Unsubscribe <i class="fas fa-bell-slash"></i>
     </button>
   `;
@@ -183,7 +183,7 @@ export function generateUnsubscribeButtonTemplate() {
 
 export function generateSaveReportButtonTemplate() {
   return `
-    <button id="story-detail-save" class="btn btn-transparent">
+    <button id="story-detail-save" class="btn btn-transparent btn-transparent-save">
       Simpan Story <i class="far fa-bookmark"></i>
     </button>
   `;
@@ -191,7 +191,7 @@ export function generateSaveReportButtonTemplate() {
 
 export function generateRemoveReportButtonTemplate() {
   return `
-    <button id="story-detail-remove" class="btn btn-transparent">
+    <button id="story-detail-remove" class="btn btn-transparent btn-transparent-remove">
       Batal Simpan <i class="fas fa-bookmark"></i>
     </button>
   `;

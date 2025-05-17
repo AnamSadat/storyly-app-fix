@@ -1,0 +1,45 @@
+{
+  "id": "/#/",
+  "start_url": "/#/",
+  "scope": "/",
+  "name": "Storyly App",
+  "short_name": "Storyly App",
+  "description": "A simple story app",
+  "display": "standalone",
+  "background_color": "#1b262c",
+  "theme_color": "#0f4c75",
+  "icons": [
+    {
+      "src": "images/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "images/screenshots/Screenshot_1.png",
+      "sizes": "1347x587",
+      "type": "image/png",
+      "form-factor": "wide"
+    },
+    {
+      "src": "images/screenshots/Screenshot_2.png",
+      "sizes": "1348x594",
+      "type": "image/png",
+      "form-factor": "wide"
+    },
+    {
+      "src": "images/screenshots/Screenshot_3.png",
+      "sizes": "860x593",
+      "type": "image/png",
+      "form-factor": "narrow"
+    }
+  ]
+}

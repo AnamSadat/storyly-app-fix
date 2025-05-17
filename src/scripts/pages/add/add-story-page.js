@@ -28,6 +28,31 @@ export default class AddStoryPage {
               Silakan lengkapi formulir di bawah untuk membuat ceita baru.<br>
               Bagikan cerita harian anda disini.
             </p>
+            <div class="shortcuts-container">
+            <br>
+              <div class="shortcuts-buttons">
+                <button id="focus-description" class="shortcut-btn" title="Fokus ke deskripsi (Ctrl+1) - Tekan Ctrl+, untuk semua shortcut">
+                  <i class="fas fa-align-left"></i> <span>Deskripsi</span>
+                </button>
+                <button id="focus-location" class="shortcut-btn" title="Fokus ke peta (Ctrl+2) - Tekan Ctrl+, untuk semua shortcut">
+                  <i class="fas fa-map-marker-alt"></i> <span>Peta</span>
+                </button>
+                <button id="take-quick-screenshot" class="shortcut-btn" title="Ambil screenshot cepat (Ctrl+3) - Tekan Ctrl+, untuk semua shortcut">
+                  <i class="fas fa-camera"></i> <span>Screenshot</span>
+                </button>
+                ${
+                  this.#isMobile
+                    ? `
+                <button id="open-mobile-camera" class="shortcut-btn" title="Buka kamera mobile">
+                  <i class="fas fa-mobile-alt"></i> <span>Kamera</span>
+                </button>`
+                    : ''
+                }
+                <button id="show-help" class="shortcut-btn" title="Tampilkan semua shortcut (Ctrl+,)">
+                  <i class="fas fa-question-circle"></i> <span>Bantuan Shortcut</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -128,6 +153,7 @@ export default class AddStoryPage {
     this.#presenter.showNewFormMap();
     this.#setupForm();
     this.#setupMobileFeatures();
+    this.#setupShortcuts();
   }
 
   #setupCamera() {
@@ -230,6 +256,88 @@ export default class AddStoryPage {
         event.currentTarget.innerHTML = '<i class="fas fa-camera"></i>Buka Kamera';
         this.#camera.stop();
       });
+  }
+
+  #setupShortcuts() {
+    document
+      .getElementById('focus-description')
+      .addEventListener('click', () => document.getElementById('description-input').focus());
+    document
+      .getElementById('focus-location')
+      .addEventListener('click', () =>
+        document.getElementById('map').scrollIntoView({ behavior: 'smooth' }),
+      );
+    document
+      .getElementById('take-quick-screenshot')
+      .addEventListener('click', () => this.#takeScreenshot());
+    document.getElementById('show-help').addEventListener('click', () => this.#showShortcutHelp());
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === ',') {
+        e.preventDefault();
+        this.#showShortcutHelp();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === '1') {
+        e.preventDefault();
+        document.getElementById('description-input').focus();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === '2') {
+        e.preventDefault();
+        document.getElementById('map').scrollIntoView({ behavior: 'smooth' });
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === '3') {
+        e.preventDefault();
+        this.#takeScreenshot();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        document.getElementById('new-form').dispatchEvent(new Event('submit'));
+      }
+    });
+  }
+
+  #showShortcutHelp() {
+    const shortcuts = [
+      { keys: 'Ctrl + ,', description: 'Menampilkan daftar semua shortcut yang tersedia' },
+      { keys: 'Ctrl + 1', description: 'Fokus ke input deskripsi cerita' },
+      { keys: 'Ctrl + 2', description: 'Scroll ke peta lokasi' },
+      { keys: 'Ctrl + 3', description: 'Ambil screenshot cepat' },
+      { keys: 'Ctrl + S', description: 'Submit form' },
+    ];
+
+    let helpHTML = `
+      <div class="shortcut-help-overlay">
+        <div class="shortcut-help-container">
+          <h2>Daftar Shortcut</h2>
+          <ul class="shortcut-list">
+    `;
+
+    shortcuts.forEach((shortcut) => {
+      helpHTML += `
+        <li>
+          <span class="shortcut-keys">${shortcut.keys}</span>
+          <span class="shortcut-desc">${shortcut.description}</span>
+        </li>
+      `;
+    });
+
+    helpHTML += `
+          </ul>
+          <button class="btn close-shortcut-help">Tutup</button>
+        </div>
+      </div>
+    `;
+
+    const existingHelp = document.querySelector('.shortcut-help-overlay');
+    if (existingHelp) {
+      existingHelp.remove();
+      return;
+    }
+
+    document.body.insertAdjacentHTML('beforeend', helpHTML);
+    document.querySelector('.close-shortcut-help').addEventListener('click', () => {
+      document.querySelector('.shortcut-help-overlay').remove();
+    });
   }
 
   async #addTakenPicture(image) {

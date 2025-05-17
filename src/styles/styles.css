@@ -373,13 +373,26 @@ select {
   /* justify-content: center; */
 }
 
-.subscribe-button {
+.scribe-button {
   background-color: var(--secondary-text-color);
   color: var(--primary-text-color);
 }
 
-.subscribe-button:hover {
+.scribe-button:hover {
   color: var(--secondary-text-color);
+}
+
+.btn-transparent-save:hover {
+  color: var(--secondary-text-color) !important;
+}
+
+.unsubscribe-button {
+  color: #fff !important;
+  background-color: var(--primary-color) !important;
+}
+
+.unsubscribe-button:hover {
+  background-color: var(--primary-hover-color) !important;
 }
 
 /* .open {
@@ -414,13 +427,22 @@ select {
 }
 
 .btn.btn-transparent {
-  border: 1px solid #d4d4d4;
+  border: 1px solid black;
   background-color: #ffffff;
-  color: #09090b !important;
+  color: var(--primary-text-color);
 }
 
 .btn.btn-transparent:hover {
-  background-color: #d4d4d4;
+  background-color: var(--primary-hover-color);
+}
+
+.btn.btn-transparent-remove {
+  color: var(--secondary-text-color) !important;
+  background-color: var(--primary-color) !important;
+}
+
+.btn.btn-transparent-remove:hover {
+  background-color: var(--primary-hover-color) !important;
 }
 
 .btn.btn-transparent:focus-visible {
@@ -1151,7 +1173,12 @@ footer {
     margin-top: 10px;
   }
 
-  .subscribe-button {
+  .unsubscribe-button {
+    color: #fff !important;
+    background-color: var(--primary-color) !important;
+  }
+
+  .scribe-button {
     background-color: var(--secondary-text-color);
     color: var(--primary-text-color);
     width: 91%;

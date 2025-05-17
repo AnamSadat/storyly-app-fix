@@ -21,7 +21,6 @@ export default class BookmarkPage {
  
       <section class="container">
         <h1 class="section-title">Daftar Story Tersimpan</h1>
- 
         <div id="stories-list__container" class="stories-list__container">
           <div id="stories-list-loading-container"></div>
         </div>

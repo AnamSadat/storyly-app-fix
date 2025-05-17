@@ -19,4 +19,5 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   await registerServiceWorker();
+  console.log('Berhasil mendaftarkan service worker.');
 });
