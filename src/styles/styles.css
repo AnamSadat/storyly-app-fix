@@ -789,6 +789,14 @@ i.loader-button {
   margin-top: 10px;
   border-radius: 8px;
 }
+/* .story-item__image-tersimpan {
+  width: 100% !important;
+} */
+
+.delete-btn {
+  width: 97% !important;
+  margin-left: 10px;
+}
 
 .story-item__content {
   flex: 1;
@@ -807,6 +815,15 @@ i.loader-button {
   word-wrap: break-word;
   white-space: normal;
   overflow-wrap: break-word;
+  color: var(--secondary-color);
+  margin: 4px 0;
+}
+
+.story-item__description-tersimpan {
+  font-size: 1rem;
+  /* word-wrap: break-word;
+  white-space: normal;
+  overflow-wrap: break-word; */
   color: var(--secondary-color);
   margin: 4px 0;
 }
@@ -976,6 +993,107 @@ footer {
 .skip-link:focus,
 .skip-link:focus-within {
   transform: translateY(0%);
+}
+
+.shortcut-btn {
+  background-color: #fff;
+  border-radius: 4px;
+  padding: 10px 20px;
+  border: 1px solid var(--primary-color);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: var(--primary-text-color);
+
+  transition: all 150ms ease-in-out;
+}
+
+.shortcut-btn:hover {
+  color: var(--secondary-text-color);
+  background-color: var(--primary-hover-color);
+}
+
+/* style shorcut */
+.shortcut-help-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.shortcut-help-container {
+  background: white;
+  padding: 2rem;
+  margin-top: 8rem;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.shortcut-help-container h2 {
+  margin-top: 0;
+  color: #333;
+  text-align: center;
+}
+
+.shortcut-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+}
+
+.shortcut-list li {
+  display: flex;
+  margin-bottom: 1rem;
+  align-items: center;
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.shortcut-keys {
+  background: #f0f0f0;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-family: monospace;
+  margin-right: 1rem;
+  min-width: 80px;
+  text-align: center;
+  font-weight: bold;
+  color: #333;
+}
+
+.shortcut-desc {
+  flex: 1;
+  color: #555;
+}
+
+.close-shortcut-help {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background: var(--primary-color) !important;
+  color: var(--secondary-text-color) !important;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.close-shortcut-help:hover {
+  background: var(--primary-hover-color) !important;
 }
 
 @media screen and (width > 1000px) {

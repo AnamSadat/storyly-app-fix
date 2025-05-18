@@ -44,14 +44,14 @@ export default class BookmarkPresenter {
     return `
       <div id="${story.id}" class="story-item card-list">
         <a href="#/story/${story.id}" class="card">
-        <img class="story-item__image" src="${story.photoUrl}" alt="${story.name}" />
+        <img class="story-item__image story-item__image-tersimpan" src="${story.photoUrl}" alt="${story.name}" />
         <div class="story-item__content">
           <h3 class="story-item__title">${story.name}</h3>
           <p class="story-item__desc">${story.description}</p>
           <p class="story-item__coords">📍 Latitude: ${story.lat}, Longitude: ${story.lon}</p>
           </div>
           </a>
-        <button class="delete-btn btn btn-ghost" data-id="${story.id}">Hapus</button>
+        <button class="delete-btn btn btn-ghost" data-id="${story.id}"><i class='fas fa-trash'></i>Hapus</button>
      </div>
     `;
   }

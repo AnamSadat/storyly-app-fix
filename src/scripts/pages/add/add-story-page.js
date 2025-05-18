@@ -38,7 +38,7 @@ export default class AddStoryPage {
                   <i class="fas fa-map-marker-alt"></i> <span>Peta</span>
                 </button>
                 <button id="take-quick-screenshot" class="shortcut-btn" title="Ambil screenshot cepat (Ctrl+3) - Tekan Ctrl+, untuk semua shortcut">
-                  <i class="fas fa-camera"></i> <span>Screenshot</span>
+                  <i class='fas fa-images'></i><span>Screenshot</span>
                 </button>
                 ${
                   this.#isMobile
