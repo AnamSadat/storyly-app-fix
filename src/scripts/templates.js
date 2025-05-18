@@ -119,15 +119,14 @@ export function generateStoryDetailTemplate({
   }
   return `
     <div class="story-detail">
-    <img src="${photoUrl}" alt="Story by ${name}" class="story-detail__image">
-    <div class="story-detail__header">
+      <img src="${photoUrl}" alt="Story by ${name}" class="story-detail__image">
+      <div class="story-detail__header">
         <div class="label-name">
           <h2 class="story-detail__title">${name}</h2>
           <p class="story-detail__date">${new Date(createdAt).toLocaleString()}</p>
         </div>
         <div class="report-detail__actions__buttons">
           <div id="save-actions-container"></div>
-          
         </div>
       </div>
       <div class="story-detail__content">
@@ -139,8 +138,6 @@ export function generateStoryDetailTemplate({
   }</p>
           <p><i class="fas fa-map"></i><strong>${space}Latitude:</strong> ${lat}</p>
           <p><i class="fas fa-map"></i><strong>${space}Longitude:</strong> ${lon}</p>
-          <p>
-          </p>
         </div>
       </div>
       <div id="title-map" class="story-detail__body__map__container">

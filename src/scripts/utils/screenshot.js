@@ -57,11 +57,6 @@ export default class Screenshot {
       ctx.drawImage(element, 0, 0);
       console.log('basic berhasil');
     } else {
-      // Swal.fire({
-      //   title: 'Gagal basicScreenshot',
-      //   text: 'Coba beberapa saat lagi',
-      //   icon: 'error',
-      // });
       throw new Error('Unsupported element type for basicScreenshot.');
     }
 

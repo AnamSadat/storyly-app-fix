@@ -1,0 +1,2 @@
+APP_URL= https://nominatim.openstreetmap.org/search
+MAP_SERVICE_API_KEY= PSF4DKI4lO2E673lLaHi

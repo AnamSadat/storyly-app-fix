@@ -21,11 +21,13 @@ export default class StoryDetailPresenter {
       await this.#view.initialMap();
     } catch (error) {
       console.error('showStoryDetailMap: error:', error);
+
       Swal.fire({
         title: 'Gagal Memuat Peta!',
         text: 'Terjadi kesalahan saat memuat peta. Silakan coba lagi.',
         icon: 'error',
       });
+
       await this.#view.mapError(error.message);
     } finally {
       this.#view.hideMapLoading();
@@ -36,16 +38,20 @@ export default class StoryDetailPresenter {
     this.#view.showStoryDetailLoading();
     try {
       const response = await getStoryById(this.#storyId);
+
       if (!response.story.lat && !response.story.lon) {
         this.#view.populateStoryDetail(response.story);
         return;
       }
+
       const story = await storyMapper(response.story);
 
       this.#view.populateStoryDetail(story);
     } catch (error) {
       console.error(error);
-      this.#view.populateStoryDetailError(error.message);
+      console.log('showStoryDetail:', error.message);
+
+      this.#view.populateStoryDetailError('Periksa kembali koneksi anda!');
     } finally {
       this.#view.hideStoryDetailLoading();
     }
@@ -54,6 +60,7 @@ export default class StoryDetailPresenter {
   async notifyMe() {
     try {
       const response = await this.#apiModel.sendReportToMeViaNotification(this.#storyId);
+
       if (!response.ok) {
         console.error('notifyMe: response:', response);
         return;
@@ -69,6 +76,7 @@ export default class StoryDetailPresenter {
       const report = await this.#apiModel.getStoryById(this.#storyId);
       console.log('Isi report dari API model:', report); // Tambahkan ini
       const story = report.story;
+
       if (!story || Object.keys(story).length === 0) {
         throw new Error('Data laporan tidak tersedia atau rusak');
       }

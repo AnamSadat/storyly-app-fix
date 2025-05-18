@@ -16,13 +16,16 @@ export default class Camera {
       window.currentStreams = [stream];
       return;
     }
+
     window.currentStreams = [...window.currentStreams, stream];
   }
+
   static stopAllStreams() {
     if (!Array.isArray(window.currentStreams)) {
       window.currentStreams = [];
       return;
     }
+
     window.currentStreams.forEach((stream) => {
       if (stream.active) {
         stream.getTracks().forEach((track) => track.stop());
@@ -61,11 +64,14 @@ export default class Camera {
       if (!(stream instanceof MediaStream)) {
         return Promise.reject(Error('MediaStream not found!'));
       }
+
       const { deviceId } = stream.getVideoTracks()[0].getSettings();
       const enumeratedDevices = await navigator.mediaDevices.enumerateDevices();
+
       const list = enumeratedDevices.filter((device) => {
         return device.kind === 'videoinput';
       });
+
       const html = list.reduce((accumulator, device, currentIndex) => {
         return accumulator.concat(`
           <option
@@ -76,6 +82,7 @@ export default class Camera {
           </option>
         `);
       }, '');
+
       this.#selectCameraElement.innerHTML = html;
     } catch (error) {
       console.error('#populateDeviceList: error:', error);
@@ -102,6 +109,7 @@ export default class Camera {
       return stream;
     } catch (error) {
       console.error('#getStream: error:', error);
+
       Swal.fire({
         title: 'Akses Kamera tidak di izinkan',
         text: 'Mohon untuk izinkan akses kamera untuk memulai kamera',

@@ -56,13 +56,11 @@ export default class AddStoryPage {
           </div>
         </div>
       </section>
-      
       <section class="container">
         <div class="new-form__container">
           <form id="new-form" class="new-form">
             <div class="form-control">
               <label for="description-input" class="new-form__description__title">Deskripsi</label>
-
               <div class="new-form__description__container">
                 <textarea
                   id="description-input"
@@ -97,9 +95,7 @@ export default class AddStoryPage {
                 <video id="camera-video" class="new-form__camera__video">
                   Video stream not available.
                 </video>
-
-                  <canvas id="camera-canvas" class="new-form__camera__canvas"></canvas>
- 
+                <canvas id="camera-canvas" class="new-form__camera__canvas"></canvas>
                 <div class="new-form__camera__tools">
                   <select id="camera-select"></select>
                   <div class="new-form__camera__tools_buttons">
@@ -114,7 +110,6 @@ export default class AddStoryPage {
             </div>
             <div class="form-control">
               <div class="new-form__location__title">Lokasi</div>
-
               <div class="new-form__location__container">
                 <div class="new-form__location__map__container">
                   <div id="map" class="new-form__location__map"></div>
@@ -228,8 +223,8 @@ export default class AddStoryPage {
       const insertingPicturesPromises = Object.values(event.target.files).map(async (file) => {
         return await this.#addTakenPicture(file);
       });
-      await Promise.all(insertingPicturesPromises);
 
+      await Promise.all(insertingPicturesPromises);
       await this.#populateTakenPictures();
     });
 
@@ -262,14 +257,17 @@ export default class AddStoryPage {
     document
       .getElementById('focus-description')
       .addEventListener('click', () => document.getElementById('description-input').focus());
+
     document
       .getElementById('focus-location')
       .addEventListener('click', () =>
         document.getElementById('map').scrollIntoView({ behavior: 'smooth' }),
       );
+
     document
       .getElementById('take-quick-screenshot')
       .addEventListener('click', () => this.#takeScreenshot());
+
     document.getElementById('show-help').addEventListener('click', () => this.#showShortcutHelp());
 
     document.addEventListener('keydown', (e) => {
@@ -277,18 +275,22 @@ export default class AddStoryPage {
         e.preventDefault();
         this.#showShortcutHelp();
       }
+
       if ((e.ctrlKey || e.metaKey) && e.key === '1') {
         e.preventDefault();
         document.getElementById('description-input').focus();
       }
+
       if ((e.ctrlKey || e.metaKey) && e.key === '2') {
         e.preventDefault();
         document.getElementById('map').scrollIntoView({ behavior: 'smooth' });
       }
+
       if ((e.ctrlKey || e.metaKey) && e.key === '3') {
         e.preventDefault();
         this.#takeScreenshot();
       }
+
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault();
         document.getElementById('new-form').dispatchEvent(new Event('submit'));
@@ -387,6 +389,7 @@ export default class AddStoryPage {
 
   #scrollDocumentationList(direction) {
     const list = document.getElementById('documentations-taken-list');
+
     if (list) list.scrollBy({ left: 200 * direction, behavior: 'smooth' });
   }
 
@@ -400,17 +403,21 @@ export default class AddStoryPage {
       );
 
     const docsList = document.getElementById('documentations-taken-list');
+
     if (docsList) {
       let touchStartX = 0;
+
       docsList.addEventListener(
         'touchstart',
         (e) => (touchStartX = e.changedTouches[0].screenX),
         false,
       );
+
       docsList.addEventListener(
         'touchend',
         (e) => {
           const touchEndX = e.changedTouches[0].screenX;
+
           if (Math.abs(touchEndX - touchStartX) > 50) {
             this.#scrollDocumentationList(touchEndX < touchStartX ? 1 : -1);
           }

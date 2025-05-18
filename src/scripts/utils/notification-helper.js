@@ -74,14 +74,14 @@ export async function subscribe() {
 
     if (!response.ok) {
       console.error('subscribe: response:', response);
-      //   alert(failureSubscribeMessage);
+
       Swal.fire({
         title: 'Subscribe Gagal',
         text: 'Langganan push notification gagal diaktifkan. Coba ulangi!',
         icon: 'error',
       });
+
       console.log('di if errorny');
-      // Undo subscribe to push notification
       await pushSubscription.unsubscribe();
       return;
     }
@@ -93,12 +93,13 @@ export async function subscribe() {
     });
   } catch (error) {
     console.error('subscribe: error:', error);
-    // alert(failureSubscribeMessage);
+
     Swal.fire({
       title: 'Subscribe Gagal',
       text: 'Langganan push notification gagal diaktifkan. Coba ulangi!',
       icon: 'error',
     });
+
     await pushSubscription.unsubscribe();
   }
 }
@@ -106,6 +107,7 @@ export async function subscribe() {
 export async function unsubscribe() {
   try {
     const pushSubscription = await getPushSubscription();
+
     if (!pushSubscription) {
       Swal.fire({
         title: 'Unsubscribe Gagal',
@@ -114,8 +116,10 @@ export async function unsubscribe() {
       });
       return;
     }
+
     const { endpoint, keys } = pushSubscription.toJSON();
     const response = await unsubscribePushNotification({ endpoint });
+
     if (!response.ok) {
       Swal.fire({
         title: 'Unsubscribe Gagal',
@@ -125,7 +129,9 @@ export async function unsubscribe() {
       console.error('unsubscribe: response:', response);
       return;
     }
+
     const unsubscribed = await pushSubscription.unsubscribe();
+
     if (!unsubscribed) {
       Swal.fire({
         title: 'Unsubscribe Gagal',
@@ -135,6 +141,7 @@ export async function unsubscribe() {
       await subscribePushNotification({ endpoint, keys });
       return;
     }
+
     Swal.fire({
       title: 'Unsubscribe Berhasil',
       text: 'Langganan push notification berhasil dinonaktifkan.',

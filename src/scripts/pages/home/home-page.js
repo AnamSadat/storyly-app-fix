@@ -22,12 +22,9 @@ export default class HomePage {
           <div id="map-loading-container"></div>
         </div>
       </section>
-
       <section class="container">
         <h1 class="tag-line">Stories</h1>
       </section>
-
-
       <section class="container">
         <div class="story-list__container">
           <div id="story-list" class="story-list__item-container"></div>

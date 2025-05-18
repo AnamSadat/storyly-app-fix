@@ -10,25 +10,21 @@ export default class RegisterPage {
       <section class="register-container">
         <div class="register-form-container">
           <h1 class="register__title">Daftar akun</h1>
-
           <form id="register-form" class="register-form">
             <div class="form-control">
               <label for="name-input" class="register-form__name-title">Nama lengkap</label>
-
               <div class="register-form__title-container">
                 <input id="name-input" type="text" name="name" placeholder="Masukkan nama lengkap Anda">
               </div>
             </div>
             <div class="form-control">
               <label for="email-input" class="register-form__email-title">Email</label>
-
               <div class="register-form__title-container">
                 <input id="email-input" type="email" name="email" placeholder="Contoh: nama@email.com">
               </div>
             </div>
             <div class="form-control">
               <label for="password-input" class="register-form__password-title">Password</label>
-
               <div class="register-form__title-container">
                 <input id="password-input" type="password" name="password" placeholder="Masukkan password baru">
               </div>
@@ -63,6 +59,7 @@ export default class RegisterPage {
         email: document.getElementById('email-input').value,
         password: document.getElementById('password-input').value,
       };
+
       await this.#presenter.getRegistered(data);
     });
   }
@@ -70,7 +67,6 @@ export default class RegisterPage {
   registeredSuccessfully(message) {
     console.log(message);
 
-    // Redirect
     location.hash = '/login';
   }
 

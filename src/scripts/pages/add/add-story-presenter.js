@@ -15,11 +15,13 @@ export default class AddStoryPagePresenter {
       await this.#view.initialMap();
     } catch (error) {
       console.error('showNewFormMap: error:', error);
+
       Swal.fire({
         title: 'Gagal Memuat Peta!',
         text: 'Terjadi kesalahan saat memuat peta. Silakan coba lagi.',
         icon: 'error',
       });
+
       await this.#view.mapError(error.message);
     } finally {
       this.#view.hideMapLoading();
@@ -28,6 +30,7 @@ export default class AddStoryPagePresenter {
 
   async postNewStory({ description, photo, latitude, longitude }) {
     this.#view.showSubmitLoadingButton();
+
     try {
       const data = {
         description: description,

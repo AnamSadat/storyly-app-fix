@@ -16,6 +16,7 @@ export default class Map {
     if (latitude == null || longitude == null) {
       return 'Lokasi tidak diketahui';
     }
+
     try {
       const url = new URL(`https://api.maptiler.com/geocoding/${longitude},${latitude}.json`);
       url.searchParams.set('key', CONFIG.MAP_SERVICE_API_KEY);
@@ -23,21 +24,17 @@ export default class Map {
       url.searchParams.set('limit', '1');
       const response = await fetch(url);
       const json = await response.json();
-      // const features = json.features;
-      // if (!features || features.length === 0) {
-      //   return `${latitude}, ${longitude}`;
-      // }
-      // const place = features[0].place_name.split(', ');
+
       if (!CONFIG.MAP_SERVICE_API_KEY) {
         console.warn('MAP_SERVICE_API_KEY belum diset!');
       }
 
       // console.log('API response:', json);
-
       if (!json.features || json.features.length === 0) {
         console.log('kosong?');
         return `${latitude}, ${longitude}`;
       }
+
       const place = json.features[0].place_name.split(', ');
       return [place.at(-2), place.at(-1)].map((name) => name).join(', ');
     } catch (error) {
@@ -131,10 +128,12 @@ export default class Map {
     // FIX: Properly remove previous map instance if already initialized
     if (container._leaflet_id != null) {
       const oldMap = container._leaflet_map;
+
       if (oldMap) {
         oldMap.remove(); // remove the map from the DOM
         console.log('ke oldmap');
       }
+
       console.log('baru di bawah oldmap');
       container.innerHTML = ''; // optionally clear contents
     }
@@ -149,7 +148,6 @@ export default class Map {
     });
 
     container._leaflet_map = this.#map;
-
     // this.#map.touchZoom.enable();
     // this.#map.doubleClickZoom.enable();
     // this.#map.boxZoom.enable();
@@ -196,17 +194,21 @@ export default class Map {
     if (typeof markerOptions !== 'object') {
       throw new Error('markerOptions must be an object');
     }
+
     const newMarker = marker(coordinates, {
       icon: this.createIcon(),
       ...markerOptions,
     });
+
     if (popupOptions) {
       if (typeof popupOptions !== 'object') {
         throw new Error('popupOptions must be an object');
       }
+
       if (!('content' in popupOptions)) {
         throw new Error('popupOptions must include `content` property.');
       }
+
       const newPopup = popup(coordinates, popupOptions);
       newMarker.bindPopup(newPopup);
     }
@@ -231,10 +233,4 @@ export default class Map {
         return 'Terjadi kesalahan yang tidak diketahui saat mengambil lokasi.';
     }
   }
-
-  // async lonLatNull(lat, lon){
-  //   if(lat === null || lon === null){
-  //     mapError();
-  //   }
-  // }
 }

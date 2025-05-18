@@ -26,6 +26,7 @@ export default class BookmarkPage {
       view: this,
       model: Database,
     });
+
     await this.#presenter.initialSavedStory();
   }
 

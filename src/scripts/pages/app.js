@@ -35,7 +35,6 @@ class App {
     this.#drawerButton = drawerButton;
     this.#navigationDrawer = navigationDrawer;
     this.#skipLinkButton = skipLinkButton;
-
     this.#init();
     App.#instance = this;
   }
@@ -93,6 +92,7 @@ class App {
 
     try {
       const page = pageFactory();
+
       if (!page) return; // Handle case when auth check fails
 
       const transition = transitionHelper({
@@ -118,6 +118,7 @@ class App {
       const start = Date.now();
       const interval = setInterval(() => {
         const el = document.querySelector(selector);
+
         if (el) {
           clearInterval(interval);
           resolve(el);
@@ -131,10 +132,11 @@ class App {
 
   async #setupPushNotification() {
     const pushNotificationTools = document.getElementById('push-notification-tools');
+
     if (!pushNotificationTools) return;
 
     try {
-      // Ensure service worker is registered
+      // memastikan service worker is registered
       if (!navigator.serviceWorker.controller) {
         await navigator.serviceWorker.register('/sw.bundle.js');
       }
@@ -154,6 +156,7 @@ class App {
     if (this.#isSubscribed) {
       pushNotificationTools.innerHTML = generateUnsubscribeButtonTemplate();
       const unsubscribeBtn = await this.#waitForElement('#unsubscribe-button');
+
       if (unsubscribeBtn) {
         unsubscribeBtn.addEventListener('click', async () => {
           await unsubscribe();
@@ -164,6 +167,7 @@ class App {
     } else {
       pushNotificationTools.innerHTML = generateSubscribeButtonTemplate();
       const subscribeBtn = await this.#waitForElement('#subscribe-button');
+
       if (subscribeBtn) {
         subscribeBtn.addEventListener('click', async () => {
           await subscribe();
@@ -211,6 +215,7 @@ class App {
   // Add public method to update navigation
   updateNavigation() {
     this.#setupNavigationList();
+
     if (isServiceWorkerAvailable()) {
       this.#setupPushNotification();
     }

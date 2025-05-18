@@ -22,6 +22,22 @@
       "purpose": "any maskable"
     }
   ],
+  "shortcuts": [
+    {
+      "name": "Add New Story",
+      "short_name": "Add Story",
+      "description": "Add a new story to share",
+      "url": "/#/new",
+      "icons": [{ "src": "images/icons-new-96.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "View Saved Stories",
+      "short_name": "Saved",
+      "description": "View your saved stories",
+      "url": "/#/savedstory",
+      "icons": [{ "src": "images/icon-view-96.png", "sizes": "192x192" }]
+    }
+  ],
   "screenshots": [
     {
       "src": "images/screenshots/Screenshot_1.png",

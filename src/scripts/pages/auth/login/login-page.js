@@ -12,18 +12,15 @@ export default class LoginPage {
       <section class="login-container">
         <article class="login-form-container">
           <h1 class="login__title">Masuk akun</h1>
-
           <form id="login-form" class="login-form">
             <div class="form-control">
               <label for="email-input" class="login-form__email-title">Email</label>
-
               <div class="login-form__title-container">
                 <input id="email-input" type="email" name="email" placeholder="Contoh: nama@email.com">
               </div>
             </div>
             <div class="form-control">
               <label for="password-input" class="login-form__password-title">Password</label>
-
               <div class="login-form__title-container">
                 <input id="password-input" type="password" name="password" placeholder="Masukkan password Anda">
               </div>
@@ -64,14 +61,12 @@ export default class LoginPage {
 
   loginSuccessfully(message) {
     console.log(message);
-
-    // Update navigation before redirecting
     const app = App.getInstance();
+
     if (app) {
       app.updateNavigation();
     }
 
-    // Redirect
     location.hash = '/';
   }
 
