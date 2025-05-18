@@ -2,6 +2,7 @@ import LoginPresenter from './login-presenter';
 import * as StoryAPI from '../../../data/api';
 import * as AuthModel from '../../../utils/auth';
 import Swal from 'sweetalert2';
+import App from '../../../pages/app';
 
 export default class LoginPage {
   #presenter = null;
@@ -63,6 +64,12 @@ export default class LoginPage {
 
   loginSuccessfully(message) {
     console.log(message);
+
+    // Update navigation before redirecting
+    const app = App.getInstance();
+    if (app) {
+      app.updateNavigation();
+    }
 
     // Redirect
     location.hash = '/';

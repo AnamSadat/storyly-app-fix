@@ -12,7 +12,6 @@ export function generateLoaderAbsoluteTemplate() {
 
 export function generateUnauthenticatedNavigationListTemplate() {
   return `
-    <li id="push-notification-tools" class="push-notification-tools"></li>
     <li><a id="login-button" href="#/login"><button class="btn-ghost">Login</button></a></li>
     <li><a id="register-button" href="#/register"><button class="btn">Register</button></a></li>
   `;
@@ -20,6 +19,8 @@ export function generateUnauthenticatedNavigationListTemplate() {
 
 export function generateAuthenticatedNavigationListTemplate() {
   return `
+    <li><a href="#/savedstory" class="nav-link tersimpan">Tersimpan</a></li>
+    <li><a href="#/about" class="nav-link">About</a></li>
     <li id="push-notification-tools" class="push-notification-tools"></li>
     <li><a id="new-report-button" href="#/new"><button class="btn-ghost btn-ghost-mobile">Buat Cerita<i class="fas fa-plus"></i></button></a></li>
     <li><a id="logout-button" class="logout-button" href="#/logout"><button class="btn">Logout <i class="fas fa-sign-out-alt"></i></button></a></li>

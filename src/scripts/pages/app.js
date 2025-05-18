@@ -19,6 +19,7 @@ import {
 import notFoundPage from './not-found/not-found-page';
 
 class App {
+  static #instance = null;
   #content = null;
   #drawerButton = null;
   #navigationDrawer = null;
@@ -26,12 +27,21 @@ class App {
   #isSubscribed = false;
 
   constructor({ navigationDrawer, drawerButton, content, skipLinkButton }) {
+    if (App.#instance) {
+      return App.#instance;
+    }
+
     this.#content = content;
     this.#drawerButton = drawerButton;
     this.#navigationDrawer = navigationDrawer;
     this.#skipLinkButton = skipLinkButton;
 
     this.#init();
+    App.#instance = this;
+  }
+
+  static getInstance() {
+    return App.#instance;
   }
 
   async #init() {
@@ -178,9 +188,15 @@ class App {
         if (result.isConfirmed) {
           getLogout();
           location.hash = '/login';
+          this.#setupNavigationList();
         }
       });
     });
+  }
+
+  // Add public method to update navigation
+  updateNavigation() {
+    this.#setupNavigationList();
   }
 }
 
