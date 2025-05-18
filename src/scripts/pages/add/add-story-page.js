@@ -436,6 +436,11 @@ export default class AddStoryPage {
   async #takeScreenshot() {
     try {
       if (this.#isMobile) {
+        Swal.fire({
+          title: 'Info!',
+          text: 'Fitur ini masih dalam tahap pengembangan untuk mobile, sementara pakai kamera!',
+          icon: 'info',
+        });
         document.getElementById('open-documentations-camera-button').click();
         return;
       }

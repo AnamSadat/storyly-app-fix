@@ -979,6 +979,7 @@ footer {
 }
 
 .shortcut-btn {
+  margin: 2px;
   background-color: #fff;
   border-radius: 4px;
   padding: 10px 20px;
@@ -1020,7 +1021,7 @@ footer {
 .shortcut-help-container {
   background: white;
   padding: 2rem;
-  margin-top: 8rem;
+  margin-top: 6.4rem;
   border-radius: 8px;
   max-width: 500px;
   width: 90%;
@@ -1365,7 +1366,70 @@ footer {
   .content {
     max-width: 400px;
   }
+
+  .story-list__map__container,
+  .story-list__map {
+    height: 500px;
+    width: 300px;
+    border-radius: 8px;
+  }
 }
+
+@media screen and (width < 500px) {
+  .story-list__container {
+    min-height: 400px;
+    margin-left: -70px !important;
+    margin-right: -70px !important;
+  }
+
+  .tag-line {
+    margin-left: -70px !important;
+  }
+
+  .story-list__map__container,
+  .story-list__map {
+    height: 500px;
+    width: 300px;
+    border-radius: 8px;
+  }
+}
+
+@media screen and (width < 450px) {
+  .story-list__map__container,
+  .story-list__map {
+    height: 500px;
+    width: 320px;
+    border-radius: 8px;
+  }
+
+  .leaflet-control-zoom-in,
+  .leaflet-control-zoom-out,
+  .leaflet-control-layers-toggle {
+    width: 20px;
+  }
+
+  .swal2-backdrop-show {
+    padding-left: -10px !important;
+  }
+
+  .login-mobile {
+    margin-top: 30px;
+    width: 100%;
+  }
+
+  .tag-line {
+    margin-left: -70px !important;
+  }
+
+  .container-mobile {
+    margin: auto;
+  }
+
+  .camera-mobile {
+    width: 300px;
+  }
+}
+
 @media screen and (width < 400px) {
   .camera-mobile {
     width: 230px;

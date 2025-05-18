@@ -25,7 +25,7 @@ export default class HomePage {
       <section class="container">
         <h1 class="tag-line">Stories</h1>
       </section>
-      <section class="container">
+      <section class="container container-mobile">
         <div class="story-list__container">
           <div id="story-list" class="story-list__item-container"></div>
           <div id="story-list-loading-container"></div>

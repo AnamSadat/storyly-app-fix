@@ -12,7 +12,7 @@ export function generateLoaderAbsoluteTemplate() {
 
 export function generateUnauthenticatedNavigationListTemplate() {
   return `
-    <li><a id="login-button" href="#/login"><button class="btn-ghost">Login</button></a></li>
+    <li><a id="login-button" href="#/login"><button class="btn-ghost login-mobile">Login</button></a></li>
     <li><a id="register-button" href="#/register"><button class="btn">Register</button></a></li>
   `;
 }

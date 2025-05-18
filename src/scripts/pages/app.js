@@ -167,15 +167,21 @@ class App {
     } else {
       pushNotificationTools.innerHTML = generateSubscribeButtonTemplate();
       const subscribeBtn = await this.#waitForElement('#subscribe-button');
-
       if (subscribeBtn) {
         subscribeBtn.addEventListener('click', async () => {
+          this.#showSubscribeLoadingButton();
           await subscribe();
           this.#isSubscribed = await isCurrentPushSubscriptionAvailable();
           await this.#updateSubscriptionUI(pushNotificationTools);
         });
       }
     }
+  }
+
+  #showSubscribeLoadingButton() {
+    document.getElementById('subscribe-button').innerHTML = `
+       Loading <i class="fas fa-spinner loader-button"></i>
+    `;
   }
 
   #setupNavigationList() {
