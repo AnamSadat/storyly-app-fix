@@ -12,14 +12,7 @@ export default class BookmarkPage {
 
   async render() {
     return `
-      <section>
-        <div class="reports-list__map__container">
-          <div id="map" class="reports-list__map"></div>
-          <div id="map-loading-container"></div>
-        </div>
-      </section>
- 
-      <section class="container">
+      <section class="content">
         <h1 class="section-title">Daftar Story Tersimpan</h1>
         <div id="stories-list__container" class="stories-list__container">
           <div id="stories-list-loading-container"></div>

@@ -49,7 +49,7 @@ export default class AddStoryPage {
                     : ''
                 }
                 <button id="show-help" class="shortcut-btn" title="Tampilkan semua shortcut (Ctrl+,)">
-                  <i class="fas fa-question-circle"></i> <span>Bantuan Shortcut</span>
+                  <i class="fas fa-question-circle"></i> <span>Shortcut</span>
                 </button>
               </div>
             </div>

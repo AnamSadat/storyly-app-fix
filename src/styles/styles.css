@@ -137,10 +137,11 @@ select {
 .content {
   max-width: 800px;
   margin: 20px auto;
-  padding: 20px;
-  background: #fff;
+  padding: 40px;
+  background: #e0e0e0;
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 .content__heading {
@@ -267,7 +268,7 @@ select {
   display: block;
 
   color: #333;
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
 .nav-list li a:hover {
@@ -376,6 +377,11 @@ select {
 .scribe-button {
   background-color: var(--secondary-text-color);
   color: var(--primary-text-color);
+}
+
+.push-notification-tools {
+  margin-left: 10px !important;
+  margin-right: 10px !important;
 }
 
 .scribe-button:hover {
@@ -718,6 +724,8 @@ i.loader-button {
 /* story list */
 
 .card-list {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px !important;
+  text-align: start !important;
 }
 
 .stories-list__container {
@@ -759,6 +767,7 @@ i.loader-button {
   padding: 12px;
   border-radius: 8px;
   border: 2px dashed white;
+  min-width: 300px;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
@@ -794,8 +803,16 @@ i.loader-button {
 } */
 
 .delete-btn {
-  width: 97% !important;
-  margin-left: 10px;
+  width: 100% !important;
+  /* margin-left: 10px; */
+  margin-bottom: 40px;
+  background-color: red !important;
+  color: var(--secondary-text-color) !important;
+}
+
+.delete-btn:hover {
+  background-color: rgb(170, 22, 22) !important;
+  color: var(--secondary-text-color);
 }
 
 .story-item__content {
@@ -806,6 +823,9 @@ i.loader-button {
 .story-item__name {
   font-size: 1.2rem;
   font-weight: bold;
+  word-wrap: break-word;
+  white-space: normal;
+  overflow-wrap: break-word;
   margin: 0;
   color: var(--primary-color);
 }
@@ -1299,9 +1319,8 @@ footer {
   .scribe-button {
     background-color: var(--secondary-text-color);
     color: var(--primary-text-color);
-    width: 91%;
+    width: 100%;
     margin-top: 10px;
-    margin-left: 10px;
     margin-bottom: 5px;
   }
 
@@ -1314,10 +1333,15 @@ footer {
     border-radius: 4px;
     width: 91%;
     text-align: center;
-    padding: 10px;
+    padding: 20px;
+    padding-top: 30px;
+    padding-bottom: 30px;
     font-weight: bold;
+    margin-left: 10px;
+    margin-top: 10px;
     color: var(--primary-text-color);
     transition: all 150ms ease-in-out;
+    text-decoration: none !important;
   }
 
   .nav-link:hover {
@@ -1366,10 +1390,17 @@ footer {
   .camera-mobile {
     width: 484px;
   }
+
+  .content {
+    max-width: 500px;
+  }
 }
 @media screen and (width < 600px) {
   .camera-mobile {
     width: 330px;
+  }
+  .content {
+    max-width: 400px;
   }
 }
 @media screen and (width < 400px) {

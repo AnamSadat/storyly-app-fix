@@ -50,7 +50,12 @@ class App {
     this._setupDrawer();
 
     if (isServiceWorkerAvailable()) {
-      await this.#setupPushNotification();
+      try {
+        await navigator.serviceWorker.register('/sw.bundle.js');
+        await this.#setupPushNotification();
+      } catch (error) {
+        console.error('Error registering service worker:', error);
+      }
     }
 
     await this.renderPage();
@@ -128,9 +133,18 @@ class App {
     const pushNotificationTools = document.getElementById('push-notification-tools');
     if (!pushNotificationTools) return;
 
-    // Check subscription status and update UI
-    this.#isSubscribed = await isCurrentPushSubscriptionAvailable();
-    await this.#updateSubscriptionUI(pushNotificationTools);
+    try {
+      // Ensure service worker is registered
+      if (!navigator.serviceWorker.controller) {
+        await navigator.serviceWorker.register('/sw.bundle.js');
+      }
+
+      // Check subscription status and update UI
+      this.#isSubscribed = await isCurrentPushSubscriptionAvailable();
+      await this.#updateSubscriptionUI(pushNotificationTools);
+    } catch (error) {
+      console.error('Error setting up push notification:', error);
+    }
   }
 
   async #updateSubscriptionUI(pushNotificationTools) {
@@ -197,6 +211,9 @@ class App {
   // Add public method to update navigation
   updateNavigation() {
     this.#setupNavigationList();
+    if (isServiceWorkerAvailable()) {
+      this.#setupPushNotification();
+    }
   }
 }
 

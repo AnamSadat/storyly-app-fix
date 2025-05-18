@@ -51,8 +51,8 @@ export default class BookmarkPresenter {
           <p class="story-item__coords">📍 Latitude: ${story.lat}, Longitude: ${story.lon}</p>
           </div>
           </a>
-        <button class="delete-btn btn btn-ghost" data-id="${story.id}"><i class='fas fa-trash'></i>Hapus</button>
-     </div>
+          </div>
+          <button class="delete-btn btn btn-ghost" data-id="${story.id}"><i class='fas fa-trash'></i>Hapus</button>
     `;
   }
 }
